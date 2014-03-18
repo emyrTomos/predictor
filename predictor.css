@@ -1,0 +1,130 @@
+body {
+	font-family : Verdana, Arial , Helvetica;
+}
+table{width : 100%;}
+.predictor {
+	max-width : 300px;
+}
+.fixture {
+	position : relative;
+	padding : 12px;
+	height : 94px;
+	font-weight : bold;
+}
+.fixture span {
+	position : absolute;
+	margin : auto;
+	width : 30px;
+	top : 12px;
+	left : 62px;
+	right : 62px;
+	line-height : 70px;
+	vertical-align : center;
+	text-align : center;
+	color : #c8c8c8;
+}
+.fixture a.statslink {
+	display : block;
+	position : absolute;
+	top : 0;
+	left : 0;
+	right : 0;
+	width : 20px;
+	padding-top : 20px;
+	margin : auto;
+	background : url("statistics.png") top center no-repeat;
+
+}
+.prediction {
+	position : relative;
+	border : 0;
+	margin : 0;
+	padding : 0;
+	width : 100%;
+	border : 1px solid black;
+}
+.home , .away {
+	position : absolute;
+	top : 12px;
+	overflow : hidden;
+	width : 50px;
+	height : 70px;
+}
+.home {
+	left : 12px;
+}
+.away {
+	right : 12px;
+}
+.away a , .home a{
+	display : block;
+	height : 50px;
+	width : 50px;
+	margin : auto;
+	text-align : center;
+	background-size : cover;
+	text-decoration : none;
+	color : #222;
+}
+#badge_MNU {
+	background-image : url("predictor_files/image.png");
+}
+#badge_STO {
+	background-image : url("predictor_files/image_006.png");
+}
+.play{
+	height : 80px;
+	margin : auto;
+	overflow : hidden;
+	background : red;
+	position : absolute;
+	top : 94px; 
+	left : 0;
+}
+.play div{
+	width : 31%;
+	margin : 1%;
+	float : left;
+}
+.play label {
+	display : block;
+	background : #f0f0f0;
+	color : #a3a3a3;
+	text-align : center;
+	width : 60%;
+	margin : auto;
+	padding : 3%;
+	border-radius : 6px 6px 0 0;
+}
+.play button {
+	display : block;
+	border-radius: 6px;
+	font-size: 17px;
+	padding: 10% 19%;
+	text-align : center;
+	margin : auto;
+	background : #54da68;
+	border : solid #54da68;
+	text-transform : uppercase;
+	color : #fff;
+	font-weight : bold;
+	width : 90%;
+}
+.stats {
+	clear : both;
+	display : none;
+}
+.stats .legend {
+	width : 70%;
+}
+.stats .team_record {
+	text-align : left;
+}
+.stats th{
+	text-align : left;	
+	font-size : 0.9em;
+}
+.stats td{
+	font-size : 0.8em;
+	overflow : hidden;
+}

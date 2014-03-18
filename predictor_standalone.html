@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="predictor.css" />
+<script type="text/javascript" src="predictor.js"></script>
+<script type="text/javascript" src="http://www.fanbookz.local/static/jscript/jquery/jquery.js?v=b7ce8b9634041d3567015fd88b5110d6"></script>
+<script type="text/javascript" src="showWidget.js"></script>
+</head>
+<body>
+	<form><input id="awayGoals" type="number" min="0" max="12" value="0" step="1" /></form>
+<div class="predictor" id="predictor">
+<a class="statslink" href="#">stats</a>
+<div id="fixture_container"></div>
+<script type="text/html" id="predictor_fixture">
+	'<div class="fixture">
+		<div class="home">
+			<a href="#" id="badge_'+fixture.home.id+'"></a>
+			<a href="#">'+fixture.home.displayString+'</a>
+		</div>
+		<span>VS</span>
+		<div class="away">
+			<a href="#"  id="badge_'+fixture.away.id+'"></a>
+			<a href="#">'+fixture.away.displayString+'</a>
+		</div>
+	</div>'
+</script>
+<div id="play_container"></div>
+<script type="text/html" id="predictor_play">
+	'<div class="play">
+		<div><label for="home_win">'+fixture.percentages.home+'</label><button id="home_win" class="predictor-play">home</button></div>
+		<div><label for="draw">'+fixture.percentages.draw+'</label><button id="draw" class="predictor-play">draw</button></div>
+		<div><label for="away_win">'+fixture.percentages.away+'</label><button id="away_win" class="predictor-play">away</button></div>
+	</div>'
+</script>
+<div id="stats_container"></div>
+<script type="text/html" id="predictor_score">
+	'<div class="score">
+		<div class="result">'+resultstring+'</div>
+		<div class="score"><a href="#">Can you predict the score?</a></div>
+		<div class="skip"><a href="#">Skip</a></div>
+	</div>'
+</script>
+<script type="text/html" id="predictor_stats">
+	'<div class="stats">
+		<table>
+			<colgroup><col class="legend"><col span="2" class="team_record"></colgroup>
+			<thead>
+				<tr><th></th><th>'+fixture.home.displayString+'</th><th>'+fixture.away.displayString+'</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>League position </td><td>'+homeStats.position+'</td><td>'+awayStats.position+'</td></tr>
+				<tr><td>Form </td><td>'+homeStats.form+'</td><td>'+awayStats.form+'</td></tr>
+				<tr><td>Home form </td><td>'+homeStats.homeForm+'</td><td>'+awayStats.homeForm+'</td></tr>
+				<tr><td>Away form </td><td>'+homeStats.awayForm+'</td><td>'+awayStats.awayForm+'</td></tr>
+				<tr><td>Average goals (H) </td><td>'+homeStats.avgHomeGoals+'</td><td>'+awayStats.avgHomeGoals+'</td></tr>
+				<tr><td>Average goals (A) </td><td>'+homeStats.avgAwayGoals+'</td><td>'+awayStats.avgAwayGoals+'</td></tr>
+				<tr><td>Average goals against (H)</td><td>'+homeStats.avgHomeConceded+'</td><td>'+awayStats.avgHomeConceded+'</td></tr>
+				<tr><td>Average goals against (A)</td><td>'+homeStats.avgAwayConceded+'</td><td>'+awayStats.avgAwayConceded+'</td></tr>
+			</tbody>
+		</table>
+	</div>'
+</script>
+</div>
+</body>
+</html>
