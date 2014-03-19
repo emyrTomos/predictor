@@ -71,10 +71,12 @@ a.statslink {
 	right : 12px;
 }
 #badge_MNU {
-	background-image : url("predictor_files/image.png");
+	background-image : url("images/MNU.png");
+	background-repeat : no-repeat;
 }
 #badge_STO {
-	background-image : url("predictor_files/image_006.png");
+	background-image : url("images/STO.png");
+	background-repeat : no-repeat;
 }
 #play_container , .play_container{
 	position : absolute;
