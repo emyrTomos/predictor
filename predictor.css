@@ -46,7 +46,6 @@ a.statslink {
 	margin : auto;
 	background : url("statistics.png") top center no-repeat;
 	text-align : center;
-	z-index: 200;
 
 }
 .prediction {
@@ -62,7 +61,7 @@ a.statslink {
 	overflow : hidden;
 	width : 90px;
 	height : 30px;
-	background-color : #ccc;
+	background-color : #333;
 	padding-top : 90px;
 	text-align : center;
 }

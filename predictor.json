@@ -13,6 +13,7 @@
 	"teamStats" : {
 		"STO" :
 			{
+				"fullName" : "Stoke City",
 				"league": "premier",
 				"position": "3",
 				"form": "wwddww",
@@ -25,6 +26,7 @@
 			},
 		"MNU" :
 			{
+				"fullName" : "Manchester United",
 				"league": "premier",
 				"position": "7",
 				"form": "LDWWL",
