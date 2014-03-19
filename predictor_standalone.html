@@ -7,37 +7,34 @@
 <script type="text/javascript" src="showWidget.js"></script>
 </head>
 <body>
-	<form><input id="awayGoals" type="number" min="0" max="12" value="0" step="1" /></form>
 <div class="predictor" id="predictor">
-<a class="statslink" href="#">stats</a>
-<div id="fixture_container"></div>
 <script type="text/html" id="predictor_fixture">
 	'<div class="fixture">
-		<div class="home">
-			<a href="#" id="badge_'+fixture.home.id+'"></a>
-			<a href="#">'+fixture.home.displayString+'</a>
-		</div>
+		<div class="home" id="badge_'+fixture.home.id+'">'
+			+fixture.home.displayString+
+		'</div>
 		<span>VS</span>
-		<div class="away">
-			<a href="#"  id="badge_'+fixture.away.id+'"></a>
-			<a href="#">'+fixture.away.displayString+'</a>
-		</div>
+		<div class="away"  id="badge_'+fixture.away.id+'">'
+			+fixture.away.displayString+
+		'</div>
+		<a class="statslink" href="#">stats</a>
 	</div>'
 </script>
-<div id="play_container"></div>
 <script type="text/html" id="predictor_play">
-	'<div class="play">
-		<div><label for="home_win">'+fixture.percentages.home+'</label><button id="home_win" class="predictor-play">home</button></div>
-		<div><label for="draw">'+fixture.percentages.draw+'</label><button id="draw" class="predictor-play">draw</button></div>
-		<div><label for="away_win">'+fixture.percentages.away+'</label><button id="away_win" class="predictor-play">away</button></div>
+	'<div id="play_container">
+		<div class="play">
+			<div><label for="home_win">'+fixture.percentages.home+'</label><button id="home_win" class="predictor-play">home</button></div>
+			<div><label for="draw">'+fixture.percentages.draw+'</label><button id="draw" class="predictor-play">draw</button></div>
+			<div><label for="away_win">'+fixture.percentages.away+'</label><button id="away_win" class="predictor-play">away</button></div>
+		</div>
 	</div>'
 </script>
 <div id="stats_container"></div>
 <script type="text/html" id="predictor_score">
 	'<div class="score">
 		<div class="result">'+resultstring+'</div>
-		<div class="score"><a href="#">Can you predict the score?</a></div>
-		<div class="skip"><a href="#">Skip</a></div>
+		<div><a class="predict" href="#">Can you predict the score?</a></div>
+		<div><a class="skip" href="#">Skip</a></div>
 	</div>'
 </script>
 <script type="text/html" id="predictor_stats">
