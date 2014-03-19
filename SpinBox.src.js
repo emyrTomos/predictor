@@ -41,6 +41,7 @@ http://creativecommons.org/publicdomain/zero/1.0/legalcode
 function SpinBox(container, options){
 
   // fetch the DOM node if a string was supplied
+  console.log("CONTAINER , ", container);
   if (typeof container == 'string'){
     container = document.getElementById(container);
   }
