@@ -100,7 +100,7 @@ predictor.attachEvents = function(fixtureId){
 		console.log("Invoking submit");
 		return predictor.submitPrediction(fixtureId);
 	});
-	$("#predictor a.predict-score").click(function(event){
+	$("#predictor button.predict-score").click(function(event){
 		return predictor.createScoreForm(fixtureId);
 	});
 
