@@ -186,6 +186,7 @@ button {
 }
 .stats .team_record {
 	text-align : left;
+	text-transform : uppercase;
 }
 .stats th{
 	text-align : left;	
