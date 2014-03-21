@@ -1,4 +1,55 @@
-var predictor = predictor || {};
+var predictor = {"predictor" : {	
+	"fixtures" :{
+		"STO_MNU" : {
+			"home" : {"id" : "STO" , "displayString" : "STO"},
+			"away" : {"id" : "MNU" , "displayString" : "MNU"},
+			"percentages" : {
+				"home": "25%",
+				"away":"25%",
+				"draw":"25%"
+			}
+		}
+	},
+	"teams" : {
+		"STO" :
+			{
+				"fullName" : "Stoke City",
+				"league": "premier",
+				"position": "3",
+				"form": "wwddww",
+				"homeForm" : "wdwww",
+				"awayForm" : "wdllw",
+				"avgHomeGoals":"1.4",
+				"avgAwayGoals" :"0.8",
+				"avgHomeConceded":"0.2",
+				"avgAwayConceded": "1.6"
+			},
+		"MNU" :
+			{
+				"fullName" : "Manchester United",
+				"league": "premier",
+				"position": "7",
+				"form": "LDWWL",
+				"homeForm" : "DWDWL",
+				"awayForm" : "LWLLL",
+				"avgHomeGoals":"1.6",
+				"avgAwayGoals" :"0.6",
+				"avgHomeConceded":"0.8",
+				"avgAwayConceded": "1.6"
+			}
+	},
+	"predictions" : {
+		"STO_MNU" : {
+			"voted" : false,
+			"prediction" : {
+				"result" : null,
+				"homeGoals" : null,
+				"awayGoals" : null
+			}
+		}
+	}
+}
+};
 Element.prototype.fetchTemplate = function() {
     if(this.tagName.toLowerCase() === "script" && this.getAttribute("type") === "text/html"){
 	    this.parentElement.removeChild(this);
@@ -23,7 +74,7 @@ $(document).ready(function(){
 /* Pick the next fixture the user hasn't yet made a prediction on */
 predictor.chooseFixture = function(){
 	for (var fixtureId in predictor.data.fixtures){
-		if(!predictor.data.myPredictions[fixtureId].voted){
+		if(!predictor.data.predictions[fixtureId].voted){
 			return fixtureId;
 		}
 	}
@@ -33,8 +84,8 @@ predictor.createFixture = function(fixtureId){
 	var containerNode = $(document.createElement('div')).attr("id" , "predictor_"+fixtureId).attr("class" , "prediction");;
 	var fixture = predictor.data.fixtures[fixtureId];
 	var resultstring = "No result yet";
-	var homeStats = predictor.data.teamStats[fixture.home.id];
-	var awayStats = predictor.data.teamStats[fixture.away.id];
+	var homeStats = predictor.data.teams[fixture.home.id];
+	var awayStats = predictor.data.teams[fixture.away.id];
 	var fixtureString = eval(predictor.templates.fixtureString);
 	var voteString = eval(predictor.templates.voteString);
 	var scoreString = eval(predictor.templates.scoreString);
@@ -46,20 +97,20 @@ predictor.createFixture = function(fixtureId){
 	var awaySpinBox = new SpinBox(containerNode.find('#awayGoals')[0], {'minimum':0 , 'maximum' : 20});
 	$(homeSpinBox.input).change(function(event){
 		console.log("HOME EVENT: " , event);
-		predictor.data.myPredictions[fixtureId].prediction.homeGoals = homeSpinBox.getValue();
+		predictor.data.predictions[fixtureId].prediction.homeGoals = homeSpinBox.getValue();
 		return false;
 	})
 	$(awaySpinBox.input).change(function(event){
 		console.log("AWAY EVENT: " , event);
-		predictor.data.myPredictions[fixtureId].prediction.awayGoals = awaySpinBox.getValue();
+		predictor.data.predictions[fixtureId].prediction.awayGoals = awaySpinBox.getValue();
 		return false;
 	})
 	return containerNode;
 }
 predictor.createScoreInvitation = function(fixtureId , chosen){
-		var prediction = predictor.data.myPredictions[fixtureId];
+		var prediction = predictor.data.predictions[fixtureId];
 		prediction.prediction.result = chosen;
-		var resultstring = (chosen === "draw")?"You predict a draw":predictor.data.teamStats[predictor.data.fixtures[fixtureId][chosen].id].fullName + " to win";
+		var resultstring = (chosen === "draw")?"You predict a draw":predictor.data.teams[predictor.data.fixtures[fixtureId][chosen].id].fullName + " to win";
 		var outgoing = $("#predictor div.play");
 		var incoming = $("#predictor div.score");
 		incoming.find('#resultsDisplay').html(resultstring);
