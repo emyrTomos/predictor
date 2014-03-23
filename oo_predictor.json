@@ -8,10 +8,58 @@
 				"away":"25%",
 				"draw":"25%"
 			}
+		},
+		"BIR_COV" : {
+			"home" : {"id" : "BIR" , "displayString" : "BBB"},
+			"away" : {"id" : "COV" , "displayString" : "CCC"},
+			"percentages" : {
+				"home": "25%",
+				"away":"25%",
+				"draw":"25%"
+			}
 		}
 	},
 	"teams" : {
 		"STO" :
+			{
+				"fullName" : "Stoke City",
+				"league": "premier",
+				"position": "3",
+				"form": "wwddww",
+				"homeForm" : "wdwww",
+				"awayForm" : "wdllw",
+				"avgHomeGoals":"1.4",
+				"avgAwayGoals" :"0.8",
+				"avgHomeConceded":"0.2",
+				"avgAwayConceded": "1.6"
+			},
+		"BIR" :
+			{
+				"fullName" : "Stoke City",
+				"league": "premier",
+				"position": "3",
+				"form": "wwddww",
+				"homeForm" : "wdwww",
+				"awayForm" : "wdllw",
+				"avgHomeGoals":"1.4",
+				"avgAwayGoals" :"0.8",
+				"avgHomeConceded":"0.2",
+				"avgAwayConceded": "1.6"
+			},
+		"COV" :
+			{
+				"fullName" : "Stoke City",
+				"league": "premier",
+				"position": "3",
+				"form": "wwddww",
+				"homeForm" : "wdwww",
+				"awayForm" : "wdllw",
+				"avgHomeGoals":"1.4",
+				"avgAwayGoals" :"0.8",
+				"avgHomeConceded":"0.2",
+				"avgAwayConceded": "1.6"
+			},
+		"WXM" :
 			{
 				"fullName" : "Stoke City",
 				"league": "premier",
