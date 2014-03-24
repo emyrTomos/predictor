@@ -8,12 +8,6 @@ var predictor = {
 		AWAY_WIN_RESULT_VALUE : "away",
 		DRAW_RESULT_VALUE : "draw"
 	},
-	utilities : {
-		attachTemplate : function(id , parent){
-			console.log("PARENT " , parent);
-			parent.innerHTML = parent.removeChild(document.getElementById(id)).innerHTML.trim().replace(/(\r\n|\n|\r\t)/gm,"");
-		}
-	},
 	model : {
 		Fixtures :function(model){
 			var model = model;
@@ -198,11 +192,200 @@ var predictor = {
 			}
 		}
 	},
+	view : {
+		Template : function(templateId , node){
+			var templateId = templateId;
+			this.node = node;
+			this.initialise = function(){
+				this.attachNode(templateId , this.node);
+			}
+			this.getPanelNodes = function(){
+				console.log("NODE " , this.node);
+				return this.node.getElementsByTagName("panel");
+			}
+			this.attachNode = function(templateId , viewport){
+				viewport.innerHTML = viewport.removeChild(document.getElementById(templateId)).innerHTML.trim().replace(/(\r\n|\n|\r\t)/gm,"");
+			}
+		},
+		Panel : function(panelNode , className , state){
+			var panelNode = panelNode;
+			var displayNode = document.createElement("div");
+			if(state){
+				displayNode.setAttribute("class" , state);
+			}else{
+				displayNode.setAttribute("class" , className);
+			}
+			this.getHtmlNode = function(){
+				displayNode.innerHTML = panelNode.innerHTML;
+				console.log("DISPLAY NODE WITH INNER HTML: ",displayNode);
+				return displayNode;
+			}
+			this.replaceDataNodeWithHtml = function(htmlNode){
+				console.log(panelNode);
+				panelNode.parentNode.replaceChild(htmlNode , panelNode);
+			}
+			this.getDataNodes = function(){
+				return panelNode.getElementsByTagName('data');
+			}
+			this.displayNode = function(){
+				return displayNode;
+			}
+		}
+
+	},
+	application : {
+		Widget : function(classbase){
+			var classbase 	= classbase;
+			var model 		= classbase.model,
+				application = classbase.application,
+				view 		= classbase.view;
+
+			var fixtures;
+			var teams;
+			var predictions;
+			var controller = new application.Controller(view);
+			console.log("PREDICTOR OBJ: " , predictor);
+			this.initialised = function(){
+				return (fixtures && fixtures.initialised() && controller && controller.initialised());
+			}
+			this.setupFixtures = function(data){
+				if(!fixtures){
+					fixtures = new model.Fixtures(model);
+				}
+				if(!fixtures.initialised()){
+					fixtures.initialise(data);
+				}
+				if(teams && teams.initialised()){
+					fixtures.initialiseFixturesWithTeams(teams);
+				}
+				if(predictions && predictions.initialised()){
+					fixture.initialiseFixturesWithPredictions(predictions);
+				}
+				console.log("FIXTURES" , fixtures);
+			}
+			this.setupTeams = function(data){
+				if(!teams){
+					teams = new model.Teams(model);
+				}
+				if(!teams.initialised()){
+					teams.initialise(data);
+				}
+				if(fixtures.fixturesready){
+					fixtures.initialiseFixturesWithTeams(teams);
+				}
+				console.log("TEAMS" , teams);
+			}
+			this.setupPredictions = function(data){
+				console.log(predictions);
+				if(!predictions){
+					predictions = new model.Predictions(model);
+				}
+				if(!predictions.initialised()){
+					predictions.initialise(data);
+				}
+				if(fixtures.fixturesready){
+					fixtures.initialiseFixturesWithPredictions(predictions);
+				}
+				console.log("PREDICTIONS: " , predictions);
+			}
+			this.ready = function(){
+				controller.initialise();
+			}
+			this.getFixtures = function(){
+				return fixtures;
+			}
+			this.getTeams = function(){
+				return teams;
+			}
+			this.getPredictions = function(){
+				return predictions;
+			}
+			this.start = function(){
+				if(this.initialised()){
+					console.log("STARTED THE WIDGET WITH " , fixtures , teams , predictions);
+
+				}else{
+					console.log("WIDGET NOT READY " , fixtures , teams , predictions);
+				}
+			}
+		},
+		Controller : function(view){
+			var initialised = false;
+			this.initialised = function(){
+				return initialised;
+			}
+			this.template;
+			var viewport;
+			var panels = {};
+			var datanodes;
+			this.initialise = function(){
+				var templateId = predictor.constants["VIEW_FIXTURE_TEMPLATE_ID"];
+				var parentId = predictor.constants["PREDICTOR_VIEWPORT_ID"];
+				viewport = document.getElementById(parentId);
+				this.template = new view.Template(templateId , viewport);
+				this.template.initialise();
+				console.trace();
+				console.log("TEMPLATE: " , this.template);
+				this.setupPanelNodes(this.template.getPanelNodes());
+				this.setupPanelViews(panels);
+				initialised = true;
+			}
+			this.setupPanelNodes = function(panelNodes){
+				//
+				console.log("PANEL NODES " , panelNodes);
+				for(var i=0 ; i<panelNodes.length ; i++){
+					var panelNode = panelNodes.item(i);
+					var panelClass = panelNode.getAttribute("class");
+					var panelState = panelNode.getAttribute("state");
+					var panelObj = new view.Panel(panelNode , panelClass , panelState);
+					if(!panels[panelClass] && panelState === null){
+						panels[panelClass] = {"panel" : panelObj};
+					}
+					else if(!panels[panelClass] && panelState !== null){
+						panels[panelClass] = {"states" : {}};
+						panels[panelClass].state[panelState] = {"panel" : panelObj};
+					}
+					else if(panels[panelClass] && panelState !== null){
+						if(!panels[panelClass].states){
+							panels[panelClass].states = {};
+						}
+						panels[panelClass].states[panelState] = {"panel" : panelObj};
+					}
+					else if(panels[panelClass] && panelState === null){
+						panels[panelClass].panel = panelObj;
+					}
+					//panelNode.parentNode.replaceChild(displayNode , panelNode);
+				}
+				console.log("PANELS: " , panels);
+			}
+			this.setupPanelViews = function(panels){
+				for(var panel in panels){
+					if(panels[panel].states){
+						var states = panels[panel].states; 
+						for (var state in states){
+							//states[state].panel
+							console.log("KEY : " , state , "VALUE" , states[state].panel);
+							var statePanel = states[state].panel;
+							statePanel.replaceDataNodeWithHtml(statePanel.getHtmlNode());
+						}
+					}
+					console.log("KEY : " , panel , "VALUE" , panels[panel].panel);
+					var topPanel = panels[panel].panel;
+					topPanel.replaceDataNodeWithHtml(topPanel.getHtmlNode());
+				}
+			}
+			//method to hide the template
+			//method to populate it with a fixture
+			//method to show the template
+			this.main = function(){
+				console.log("controller has started");
+			}
+		}
+	}
 }
-predictor.widget = new Widget(predictor)
+predictor.widget = new predictor.application.Widget(predictor)
 $.get( "oo_predictor.json" , function(data){
 	console.log("FETCHING JSON");
-	predictor.data = data.predictor;
 	predictor.widget.setupFixtures(data.predictor.fixtures);
 	predictor.widget.setupTeams(data.predictor.teams);
 	predictor.widget.setupPredictions(data.predictor.predictions);
@@ -215,196 +398,10 @@ $(document).ready(function(){
 });
 
 
-function Widget(classbase){
-	var classbase = classbase;
-	var model = classbase.model;
-
-	var fixtures;
-	var teams;
-	var predictions;
-	var controller = new Controller();
-	console.log("PREDICTOR OBJ: " , predictor);
-	this.initialised = function(){
-		return (fixtures && fixtures.initialised() && controller && controller.initialised());
-	}
-	this.setupFixtures = function(data){
-		if(!fixtures){
-			fixtures = new model.Fixtures(model);
-		}
-		if(!fixtures.initialised()){
-			fixtures.initialise(data);
-		}
-		if(teams && teams.initialised()){
-			fixtures.initialiseFixturesWithTeams(teams);
-		}
-		if(predictions && predictions.initialised()){
-			fixture.initialiseFixturesWithPredictions(predictions);
-		}
-		console.log("FIXTURES" , fixtures);
-	}
-	this.setupTeams = function(data){
-		if(!teams){
-			teams = new model.Teams(model);
-		}
-		if(!teams.initialised()){
-			teams.initialise(data);
-		}
-		if(fixtures.fixturesready){
-			fixtures.initialiseFixturesWithTeams(teams);
-		}
-		console.log("TEAMS" , teams);
-	}
-	this.setupPredictions = function(data){
-		console.log(predictions);
-		if(!predictions){
-			predictions = new model.Predictions(model);
-		}
-		if(!predictions.initialised()){
-			predictions.initialise(data);
-		}
-		if(fixtures.fixturesready){
-			fixtures.initialiseFixturesWithPredictions(predictions);
-		}
-		console.log("PREDICTIONS: " , predictions);
-	}
-	this.ready = function(){
-		controller.initialise();
-	}
-	this.getFixtures = function(){
-		return fixtures;
-	}
-	this.getTeams = function(){
-		return teams;
-	}
-	this.getPredictions = function(){
-		return predictions;
-	}
-	this.start = function(){
-		if(this.initialised()){
-			console.log("STARTED THE WIDGET WITH " , fixtures , teams , predictions);
-
-		}else{
-			console.log("WIDGET NOT READY " , fixtures , teams , predictions);
-		}
-	}
-}
 
 
 
 //Controller
-function Controller(){
-	var initialised = false;
-	this.initialised = function(){
-		return initialised;
-	}
-	this.template;
-	var viewport;
-	var panels = {};
-	var datanodes;
-	this.initialise = function(){
-		var templateId = predictor.constants["VIEW_FIXTURE_TEMPLATE_ID"];
-		var parentId = predictor.constants["PREDICTOR_VIEWPORT_ID"];
-		viewport = document.getElementById(parentId);
-		this.template = new Template(templateId , viewport);
-		this.template.initialise();
-		console.trace();
-		console.log("TEMPLATE: " , this.template);
-		this.setupPanelNodes(this.template.getPanelNodes());
-		this.setupPanelViews(panels);
-		initialised = true;
-	}
-	this.setupPanelNodes = function(panelNodes){
-		//
-		console.log("PANEL NODES " , panelNodes);
-		for(var i=0 ; i<panelNodes.length ; i++){
-			var panelNode = panelNodes.item(i);
-			var panelClass = panelNode.getAttribute("class");
-			var panelState = panelNode.getAttribute("state");
-			var panelObj = new Panel(panelNode , panelClass , panelState);
-			if(!panels[panelClass] && panelState === null){
-				panels[panelClass] = {"panel" : panelObj};
-			}
-			else if(!panels[panelClass] && panelState !== null){
-				panels[panelClass] = {"states" : {}};
-				panels[panelClass].state[panelState] = {"panel" : panelObj};
-			}
-			else if(panels[panelClass] && panelState !== null){
-				if(!panels[panelClass].states){
-					panels[panelClass].states = {};
-				}
-				panels[panelClass].states[panelState] = {"panel" : panelObj};
-			}
-			else if(panels[panelClass] && panelState === null){
-				panels[panelClass].panel = panelObj;
-			}
-			//panelNode.parentNode.replaceChild(displayNode , panelNode);
-		}
-		console.log("PANELS: " , panels);
-	}
-	this.setupPanelViews = function(panels){
-		for(var panel in panels){
-			if(panels[panel].states){
-				var states = panels[panel].states; 
-				for (var state in states){
-					//states[state].panel
-					console.log("KEY : " , state , "VALUE" , states[state].panel);
-					var statePanel = states[state].panel;
-					statePanel.replaceDataNodeWithHtml(statePanel.getHtmlNode());
-				}
-			}
-			console.log("KEY : " , panel , "VALUE" , panels[panel].panel);
-			var topPanel = panels[panel].panel;
-			topPanel.replaceDataNodeWithHtml(topPanel.getHtmlNode());
-		}
-	}
-	//method to hide the template
-	//method to populate it with a fixture
-	//method to show the template
-	this.main = function(){
-		console.log("controller has started");
-	}
-}
 
 
 //View
-function Template(templateId , node){
-	var templateId = templateId;
-	this.node = node;
-	this.initialise = function(){
-		console.log("PREDICTOR " , predictor.utilities);
-		predictor.utilities.attachTemplate(templateId , this.node);
-	}
-	this.getPanelNodes = function(){
-		console.log("NODE " , this.node);
-		return this.node.getElementsByTagName("panel");
-	}
-	this.attachNode = function(panel, node){
-
-	}
-	//get panel nodes and give them to panel objects
-	//get data nodes and work out what they want
-}
-function Panel(panelNode , className , state){
-	var panelNode = panelNode;
-	var displayNode = document.createElement("div");
-	if(state){
-		displayNode.setAttribute("class" , state);
-	}else{
-		displayNode.setAttribute("class" , className);
-	}
-	this.getHtmlNode = function(){
-		displayNode.innerHTML = panelNode.innerHTML;
-		console.log("DISPLAY NODE WITH INNER HTML: ",displayNode);
-		return displayNode;
-	}
-	this.replaceDataNodeWithHtml = function(htmlNode){
-		console.log(panelNode);
-		panelNode.parentNode.replaceChild(htmlNode , panelNode);
-	}
-	this.getDataNodes = function(){
-		return panelNode.getElementsByTagName('data');
-	}
-	this.displayNode = function(){
-		return displayNode;
-	}
-}
