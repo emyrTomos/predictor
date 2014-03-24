@@ -166,7 +166,7 @@
 }
 #predictor .stats {
 	clear : both;
-	display : none;
+	/*display : none;*/
 	background : #fff;
 	position : absolute;
 	top : 250px;

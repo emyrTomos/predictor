@@ -20,7 +20,7 @@
 			</div>
 			<a class="statslink" href="#">stats</a>
 			<panel class="prediction">
-				<div class="play">
+				<panel class="prediction" state="select-result">
 					<div>
 						<label for="home_win">
 							<data source="fixture" field="percentages.home" />
@@ -39,8 +39,8 @@
 						</label>
 						<button id="away_win" class="predictor-play">away</button>
 					</div>
-				</div>
-				<div class="score">
+				</panel>
+				<panel class="prediction" state="result-selected">
 					<div class="result" id="resultsDisplay">
 						<data class="controller" field="fixture.resultstring" />
 					</div>
@@ -49,21 +49,21 @@
 						<button class="predict-score" href="#">Predict</button>
 					</div>
 					<div class="scoreAction">
-						No thanks, just the outcome:
+						No thanks, just theprediction  state="select-score"outcome:
 						<button class="predictor-submit" href="#">Submit</button>
 					</div>
-				</div>
-				<div class="selectScore">
+				</panel>
+				<panel class="prediction" state="select-score">
 					<div>
 						<div class="home"><div id="homeGoals"></div></div>
 						<div class="away"><div id="awayGoals"></div></div>
 						<button class="predictor-submit">done</button>
 					</div>
-				</div>
+				</panel>
 			</panel>
 			<panel class="stats">
 				<div class="stats">
-					<table>
+					<panelle>
 						<colgroup><col class="legend"><col span="2" class="team_record"></colgroup>
 						<thead>
 							<tr><th></th><th>'+fixture.home.displayString+'</th><th>'+fixture.away.displayString+'</th></tr>
