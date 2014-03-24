@@ -10,7 +10,7 @@
 <body>
 <div class="predictor" id="predictor">
 	<script type="text/html" id="predictor_fixture">
-		<div class="fixture">
+		<panel class="fixture">
 			<div class="home" id="badge_'+fixture.home.id+'">
 				<data source="fixture" field="home.displayString" />
 			</div>
@@ -19,69 +19,102 @@
 				<data source="fixture" field="away.displayString" />
 			</div>
 			<a class="statslink" href="#">stats</a>
-			<panel class="prediction">
-				<panel class="prediction" state="select-result">
-					<div>
-						<label for="home_win">
-							<data source="fixture" field="percentages.home" />
-						</label>
-						<button id="home_win" class="predictor-play">home</button>
-					</div>
-					<div>
-						<label for="draw">
-							<data source="fixture" field="percentages.draw" />
-						</label>
-						<button id="draw" class="predictor-play">draw</button>
-					</div>
-					<div>
-						<label for="away_win">
-							<data source="fixture" field="percentages.away" />
-						</label>
-						<button id="away_win" class="predictor-play">away</button>
-					</div>
-				</panel>
-				<panel class="prediction" state="result-selected">
-					<div class="result" id="resultsDisplay">
-						<data class="controller" field="fixture.resultstring" />
-					</div>
-					<div class="scoreAction">
-						Can you predict the score?
-						<button class="predict-score" href="#">Predict</button>
-					</div>
-					<div class="scoreAction">
-						No thanks, just theprediction  state="select-score"outcome:
-						<button class="predictor-submit" href="#">Submit</button>
-					</div>
-				</panel>
-				<panel class="prediction" state="select-score">
-					<div>
-						<div class="home"><div id="homeGoals"></div></div>
-						<div class="away"><div id="awayGoals"></div></div>
-						<button class="predictor-submit">done</button>
-					</div>
-				</panel>
 			</panel>
-			<panel class="stats">
-				<div class="stats">
-					<panelle>
-						<colgroup><col class="legend"><col span="2" class="team_record"></colgroup>
-						<thead>
-							<tr><th></th><th>'+fixture.home.displayString+'</th><th>'+fixture.away.displayString+'</th></tr>
-						</thead>
-						<tbody>
-							<tr><td>League position </td><td>'+homeStats.position+'</td><td>'+awayStats.position+'</td></tr>
-							<tr><td>Form </td><td>'+homeStats.form+'</td><td>'+awayStats.form+'</td></tr>
-							<tr><td>Home form </td><td>'+homeStats.homeForm+'</td><td>'+awayStats.homeForm+'</td></tr>
-							<tr><td>Away form </td><td>'+homeStats.awayForm+'</td><td>'+awayStats.awayForm+'</td></tr>
-							<tr><td>Average goals (H) </td><td>'+homeStats.avgHomeGoals+'</td><td>'+awayStats.avgHomeGoals+'</td></tr>
-							<tr><td>Average goals (A) </td><td>'+homeStats.avgAwayGoals+'</td><td>'+awayStats.avgAwayGoals+'</td></tr>
-							<tr><td>Average goals against (H)</td><td>'+homeStats.avgHomeConceded+'</td><td>'+awayStats.avgHomeConceded+'</td></tr>
-							<tr><td>Average goals against (A)</td><td>'+homeStats.avgAwayConceded+'</td><td>'+awayStats.avgAwayConceded+'</td></tr>
-						</tbody>
-					</table>
+		<panel class="prediction">
+			<panel class="prediction" state="select-result">
+				<div>
+					<label for="home_win">
+						<data source="fixture" field="percentages.home" />0
+					</label>
+					<button id="home_win" class="predictor-play">home</button>
+				</div>
+				<div>
+					<label for="draw">
+						<data source="fixture" field="percentages.draw" />0
+					</label>
+					<button id="draw" class="predictor-play">draw</button>
+				</div>
+				<div>
+					<label for="away_win">
+						<data source="fixture" field="percentages.away" />0
+					</label>
+					<button id="away_win" class="predictor-play">away</button>
 				</div>
 			</panel>
-		</div>
+			<panel class="prediction" state="result-selected">
+				<div class="result" id="resultsDisplay">
+					<data class="controller" field="fixture.resultstring" />
+				</div>
+				<div class="scoreAction">
+					Can you predict the score?
+					<button class="predict-score" href="#">Predict</button>
+				</div>
+				<div class="scoreAction">
+					No thanks, just theprediction  state="select-score"outcome:
+					<button class="predictor-submit" href="#">Submit</button>
+				</div>
+			</panel>
+			<panel class="prediction" state="select-score">
+				<div>
+					<div class="home"><div id="homeGoals"></div></div>
+					<div class="away"><div id="awayGoals"></div></div>
+					<button class="predictor-submit">done</button>
+				</div>
+			</panel>
+		</panel>
+		<panel class="stats">
+				<table>
+					<colgroup><col class="legend"><col span="2" class="team_record"></colgroup>
+					<thead>
+						<tr>
+							<th></th>
+							<th><data source="fixture" field="fixture.home.displayString" /></th>
+							<th><data source="fixture" field="fixture.away.displayString" /></th></tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>League position </td>
+							<td><data source="fixture" field="homeStats.position" /></td>
+							<td><data source="fixture" field="awayStats.position" /></td>
+						</tr>
+						<tr>
+						<td>Form </td>
+							<td><data source="fixture" field="homeStats.form" /></td>
+							<td><data source="fixture" field="awayStats.form" /></td>
+						</tr>
+						<tr>
+							<td>Home form </td>
+							<td><data source="fixture" field="homeStats.homeForm" /></td>
+							<td><data source="fixture" field="awayStats.homeForm" /></td>
+						</tr>
+						<tr>
+							<td>Away form </td>
+							<td><data source="fixture" field="homeStats.awayForm" /></td>
+							<td><data source="fixture" field="awayStats.awayForm" /></td>
+						</tr>
+						<tr>
+							<td>Average goals (H) </td>
+							<td><data source="fixture" field="homeStats.avgHomeGoals" /></td>
+							<td><data source="fixture" field="awayStats.avgHomeGoals" /></td>
+							</tr>
+						<tr>
+							<td>Average goals (A) </td>
+							<td><data source="fixture" field="homeStats.avgAwayGoals" /></td>
+							<td><data source="fixture" field="awayStats.avgAwayGoals" /></td>
+						</tr>
+						<tr>
+							<td>Average goals against (H)</td>
+							<td><data source="fixture" field="homeStats.avgHomeConceded" /></td>
+							<td><data source="fixture" field="awayStats.avgHomeConceded" /></td>
+						</tr>
+						<tr>
+							<td>Average goals against (A)</td>
+							<td><data source="fixture" field="homeStats.avgAwayConceded" /></td>
+							<td><data source="fixture" field="awayStats.avgAwayConceded" /></td>
+						</tr>
+					</tbody>
+				</table>
+		</panel>
 	</script>
 </div>
 

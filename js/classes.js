@@ -10,6 +10,7 @@ var predictor = {
 	},
 	utilities : {
 		attachTemplate : function(id , parent){
+			console.log("PARENT " , parent);
 			parent.innerHTML = parent.removeChild(document.getElementById(id)).innerHTML.trim().replace(/(\r\n|\n|\r\t)/gm,"");
 		}
 	},
@@ -308,14 +309,13 @@ function Controller(){
 		this.template.initialise();
 		console.trace();
 		console.log("TEMPLATE: " , this.template);
-		var panelNodes = this.template.getPanelNodes();
-		this.setupPanelNodes(panelNodes);
-
+		this.setupPanelNodes(this.template.getPanelNodes());
+		this.setupPanelViews(panels);
 		initialised = true;
 	}
 	this.setupPanelNodes = function(panelNodes){
 		//
-		console.log(panelNodes);
+		console.log("PANEL NODES " , panelNodes);
 		for(var i=0 ; i<panelNodes.length ; i++){
 			var panelNode = panelNodes.item(i);
 			var panelClass = panelNode.getAttribute("class");
@@ -325,23 +325,38 @@ function Controller(){
 				panels[panelClass] = {"panel" : panelObj};
 			}
 			else if(!panels[panelClass] && panelState !== null){
-				panels[panelClass] = {"status" : {}};
-				panels[panelClass].status[panelState] = {"panel" : panelObj};
+				panels[panelClass] = {"states" : {}};
+				panels[panelClass].state[panelState] = {"panel" : panelObj};
 			}
 			else if(panels[panelClass] && panelState !== null){
-				if(!panels[panelClass].status){
-					panels[panelClass].status = {};
+				if(!panels[panelClass].states){
+					panels[panelClass].states = {};
 				}
-				panels[panelClass].status[panelState] = {"panel" : panelObj};
+				panels[panelClass].states[panelState] = {"panel" : panelObj};
 			}
 			else if(panels[panelClass] && panelState === null){
 				panels[panelClass].panel = panelObj;
 			}
 			//panelNode.parentNode.replaceChild(displayNode , panelNode);
-			console.log("PANELS: " , panels);
+		}
+		console.log("PANELS: " , panels);
+	}
+	this.setupPanelViews = function(panels){
+		for(var panel in panels){
+			if(panels[panel].states){
+				var states = panels[panel].states; 
+				for (var state in states){
+					//states[state].panel
+					console.log("KEY : " , state , "VALUE" , states[state].panel);
+					var statePanel = states[state].panel;
+					statePanel.replaceDataNodeWithHtml(statePanel.getHtmlNode());
+				}
+			}
+			console.log("KEY : " , panel , "VALUE" , panels[panel].panel);
+			var topPanel = panels[panel].panel;
+			topPanel.replaceDataNodeWithHtml(topPanel.getHtmlNode());
 		}
 	}
-
 	//method to hide the template
 	//method to populate it with a fixture
 	//method to show the template
@@ -352,15 +367,12 @@ function Controller(){
 
 
 //View
-function Template(templateId , parent){
+function Template(templateId , node){
 	var templateId = templateId;
-	this.parent = parent;
-	this.node;
+	this.node = node;
 	this.initialise = function(){
-		console.trace();
 		console.log("PREDICTOR " , predictor.utilities);
-		predictor.utilities.attachTemplate(templateId , this.parent);
-		this.node = this.parent.firstChild;
+		predictor.utilities.attachTemplate(templateId , this.node);
 	}
 	this.getPanelNodes = function(){
 		console.log("NODE " , this.node);
@@ -381,14 +393,13 @@ function Panel(panelNode , className , state){
 		displayNode.setAttribute("class" , className);
 	}
 	this.getHtmlNode = function(){
-		console.log("CHILDREN" , panelNode.childNodes);
-		var elementList = Array.prototype.slice.call(panelNode.childNodes);
-		console.log("ELEMENTLIST",elementList);
-		for(var i=0;i<elementList.length ; i++){
-			console.log("Appending child " , panelNode.childNodes.item(i) , i)
-			displayNode.appendChild(elementList[i]);
-		}
+		displayNode.innerHTML = panelNode.innerHTML;
+		console.log("DISPLAY NODE WITH INNER HTML: ",displayNode);
 		return displayNode;
+	}
+	this.replaceDataNodeWithHtml = function(htmlNode){
+		console.log(panelNode);
+		panelNode.parentNode.replaceChild(htmlNode , panelNode);
 	}
 	this.getDataNodes = function(){
 		return panelNode.getElementsByTagName('data');
