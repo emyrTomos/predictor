@@ -2,23 +2,26 @@
 	"fixtures" :{
 		"STO_MNU" : {
 			"home" : {"id" : "STO" , "displayString" : "STO"},
-			"away" : {"id" : "MNU" , "displayString" : "MNU"},
-			"percentages" : {
-				"home": "25%",
-				"away":"25%",
-				"draw":"25%"
-			}
+			"away" : {"id" : "MNU" , "displayString" : "MNU"}
+		},
+		"COV_BIR" : {
+			"home" : {"id" : "COV" , "displayString" : "COV"},
+			"away" : {"id" : "BIR" , "displayString" : "BIR"}
+		},
+		"SWA_WXM" : {
+			"home" : {"id" : "SWA" , "displayString" : "SWA"},
+			"away" : {"id" : "WXM" , "displayString" : "WXM"}
 		}
 	},
-	"teamStats" : {
+	"teams" : {
 		"STO" :
 			{
 				"fullName" : "Stoke City",
 				"league": "premier",
 				"position": "3",
-				"form": "wwddww",
-				"homeForm" : "wdwww",
-				"awayForm" : "wdllw",
+				"form": "WWDDWW",
+				"homeForm" : "WDWWW",
+				"awayForm" : "WDLLW",
 				"avgHomeGoals":"1.4",
 				"avgAwayGoals" :"0.8",
 				"avgHomeConceded":"0.2",
@@ -36,16 +39,102 @@
 				"avgAwayGoals" :"0.6",
 				"avgHomeConceded":"0.8",
 				"avgAwayConceded": "1.6"
+			},
+		"COV" :
+			{
+				"fullName" : "Coventry City",
+				"league": "premier",
+				"position": "3",
+				"form": "WWDDWW",
+				"homeForm" : "WDWWW",
+				"awayForm" : "WDLLW",
+				"avgHomeGoals":"1.4",
+				"avgAwayGoals" :"0.8",
+				"avgHomeConceded":"0.2",
+				"avgAwayConceded": "1.6"
+			},
+		"BIR" :
+			{
+				"fullName" : "Birmingham City",
+				"league": "premier",
+				"position": "7",
+				"form": "LDWWL",
+				"homeForm" : "DWDWL",
+				"awayForm" : "LWLLL",
+				"avgHomeGoals":"1.6",
+				"avgAwayGoals" :"0.6",
+				"avgHomeConceded":"0.8",
+				"avgAwayConceded": "1.6"
+			},
+		"WXM" :
+			{
+				"fullName" : "Wrexham",
+				"league": "premier",
+				"position": "3",
+				"form": "WWDDWW",
+				"homeForm" : "WDWWW",
+				"awayForm" : "WDLLW",
+				"avgHomeGoals":"1.4",
+				"avgAwayGoals" :"0.8",
+				"avgHomeConceded":"0.2",
+				"avgAwayConceded": "1.6"
+			},
+		"SWA" :
+			{
+				"fullName" : "Swansea City",
+				"league": "premier",
+				"position": "7",
+				"form": "LDWWL",
+				"homeForm" : "DWDWL",
+				"awayForm" : "LWLLL",
+				"avgHomeGoals":"1.6",
+				"avgAwayGoals" :"0.6",
+				"avgHomeConceded":"0.8",
+				"avgAwayConceded": "1.6"
 			}
 	},
-	"myPredictions" : {
+	"predictions" : {
 		"STO_MNU" : {
-			"voted" : false,
+			"voted" : true,
 			"prediction" : {
-				"result" : null,
+				"result" : "draw",
 				"homeGoals" : null,
 				"awayGoals" : null
 			}
+		}
+	},
+	"percentages" : {
+		"COV_BIR" : {
+			"home": "251%",
+			"away":"251%",
+			"draw":"251%"
+		},
+		"STO_MNU" : {
+			"home": "252%",
+			"away":"252%",
+			"draw":"252%"
+		},
+		"SWA_WXM" : {
+			"home": "253%",
+			"away":"253%",
+			"draw":"253%"
+		}
+	},
+	"odds" : {
+		"COV_BIR" : {
+			"home": "5:1",
+			"away":"6:1",
+			"draw":"7:1"
+		},
+		"STO_MNU" : {
+			"home": "5:2",
+			"away":"6:2",
+			"draw":"7:2"
+		},
+		"SWA_WXM" : {
+			"home": "5:3",
+			"away":"6:3",
+			"draw":"7:3"
 		}
 	}
 }
