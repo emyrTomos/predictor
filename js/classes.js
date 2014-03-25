@@ -33,7 +33,6 @@ var predictor = {
 			}
 			this.initialise = function(initObj){
 				for (var fixtureId in initObj){
-					console.log("CALLIING" , this)
 					fixtures[fixtureId] = new model.Fixture(model , initObj[fixtureId].home.id , initObj[fixtureId].away.id);
 				}
 				fixturesready = true;
@@ -55,7 +54,6 @@ var predictor = {
 				for (var fixtureId in fixtures){
 					var fixture = this.getFixtureById(fixtureId);
 					var prediction = predictions.getPredictionById(fixtureId)||predictions.addPrediction(fixtureId , new model.Prediction());
-					console.log("PREDICTION" , prediction);
 					fixture.addPrediction(prediction);
 				}
 				predictionsready = true; 
@@ -70,7 +68,6 @@ var predictor = {
 			var teams = {};
 			this.initialised = function(){return (teamsready && predictionready);}
 			this.initialise = function(homeTeam , awayTeam){
-				console.log("HOME TEAM: " , homeTeam.constructor);
 				if(homeTeam instanceof model.Team && awayTeam instanceof model.Team){
 					teams[this.homeTeamId] = homeTeam;
 					teams[this.awayTeamId] = awayTeam;
@@ -115,7 +112,6 @@ var predictor = {
 			}
 		},
 		Team : function(teamId){
-			//this will need a lot more work once we see the shape of the data
 			this.teamId = teamId;
 			var initialised = false;
 			var team , stats , badge;
@@ -200,7 +196,6 @@ var predictor = {
 				this.attachNode(templateId , this.node);
 			}
 			this.getPanelNodes = function(){
-				console.log("NODE " , this.node);
 				return this.node.getElementsByTagName("panel");
 			}
 			this.attachNode = function(templateId , viewport){
@@ -217,11 +212,9 @@ var predictor = {
 			}
 			this.getHtmlNode = function(){
 				displayNode.innerHTML = panelNode.innerHTML;
-				console.log("DISPLAY NODE WITH INNER HTML: ",displayNode);
 				return displayNode;
 			}
 			this.replaceDataNodeWithHtml = function(htmlNode){
-				console.log(panelNode);
 				panelNode.parentNode.replaceChild(htmlNode , panelNode);
 			}
 			this.getDataNodes = function(){
@@ -243,8 +236,17 @@ var predictor = {
 			var fixtures;
 			var teams;
 			var predictions;
-			var controller = new application.Controller(view);
-			console.log("PREDICTOR OBJ: " , predictor);
+			var controller = new application.Controller(view,application);
+			$.get( "oo_predictor.json" , function(data){
+				classbase.widget.setupFixtures(data.predictor.fixtures);
+				classbase.widget.setupTeams(data.predictor.teams);
+				classbase.widget.setupPredictions(data.predictor.predictions);
+				classbase.widget.start();
+			});
+			$(document).ready(function(){
+				classbase.widget.ready();
+				classbase.widget.start();
+			});
 			this.initialised = function(){
 				return (fixtures && fixtures.initialised() && controller && controller.initialised());
 			}
@@ -261,7 +263,6 @@ var predictor = {
 				if(predictions && predictions.initialised()){
 					fixture.initialiseFixturesWithPredictions(predictions);
 				}
-				console.log("FIXTURES" , fixtures);
 			}
 			this.setupTeams = function(data){
 				if(!teams){
@@ -273,10 +274,8 @@ var predictor = {
 				if(fixtures.fixturesready){
 					fixtures.initialiseFixturesWithTeams(teams);
 				}
-				console.log("TEAMS" , teams);
 			}
 			this.setupPredictions = function(data){
-				console.log(predictions);
 				if(!predictions){
 					predictions = new model.Predictions(model);
 				}
@@ -286,7 +285,6 @@ var predictor = {
 				if(fixtures.fixturesready){
 					fixtures.initialiseFixturesWithPredictions(predictions);
 				}
-				console.log("PREDICTIONS: " , predictions);
 			}
 			this.ready = function(){
 				controller.initialise();
@@ -303,36 +301,32 @@ var predictor = {
 			this.start = function(){
 				if(this.initialised()){
 					console.log("STARTED THE WIDGET WITH " , fixtures , teams , predictions);
-
 				}else{
 					console.log("WIDGET NOT READY " , fixtures , teams , predictions);
 				}
 			}
 		},
-		Controller : function(view){
+		Controller : function(view , application){
 			var initialised = false;
 			this.initialised = function(){
 				return initialised;
 			}
 			this.template;
-			var viewport;
+			var viewport,	datanodes,	events;
 			var panels = {};
-			var datanodes;
 			this.initialise = function(){
 				var templateId = predictor.constants["VIEW_FIXTURE_TEMPLATE_ID"];
 				var parentId = predictor.constants["PREDICTOR_VIEWPORT_ID"];
 				viewport = document.getElementById(parentId);
 				this.template = new view.Template(templateId , viewport);
 				this.template.initialise();
-				console.trace();
-				console.log("TEMPLATE: " , this.template);
 				this.setupPanelNodes(this.template.getPanelNodes());
 				this.setupPanelViews(panels);
+				events = new application.Events(panels);
+				events.init();
 				initialised = true;
 			}
 			this.setupPanelNodes = function(panelNodes){
-				//
-				console.log("PANEL NODES " , panelNodes);
 				for(var i=0 ; i<panelNodes.length ; i++){
 					var panelNode = panelNodes.item(i);
 					var panelClass = panelNode.getAttribute("class");
@@ -354,25 +348,22 @@ var predictor = {
 					else if(panels[panelClass] && panelState === null){
 						panels[panelClass].panel = panelObj;
 					}
-					//panelNode.parentNode.replaceChild(displayNode , panelNode);
 				}
-				console.log("PANELS: " , panels);
 			}
 			this.setupPanelViews = function(panels){
 				for(var panel in panels){
 					if(panels[panel].states){
 						var states = panels[panel].states; 
 						for (var state in states){
-							//states[state].panel
-							console.log("KEY : " , state , "VALUE" , states[state].panel);
 							var statePanel = states[state].panel;
 							statePanel.replaceDataNodeWithHtml(statePanel.getHtmlNode());
 						}
 					}
-					console.log("KEY : " , panel , "VALUE" , panels[panel].panel);
 					var topPanel = panels[panel].panel;
 					topPanel.replaceDataNodeWithHtml(topPanel.getHtmlNode());
 				}
+			}
+			this.setupEvents = function(panels){
 			}
 			//method to hide the template
 			//method to populate it with a fixture
@@ -380,28 +371,27 @@ var predictor = {
 			this.main = function(){
 				console.log("controller has started");
 			}
+		},
+		Events : function(panels){
+			this.init = function(){
+				$("#predictor a.stats").click(function(fixtureId){
+					$("#predictor .stats").slideToggle();
+					console.log("CLICK " ,$("#predictor .stats") );
+					return false;
+				});
+				$("#predictor div.prediction button").click(function(event){
+					var chosen = event.target.attributes["id"].value.split("_")[0];
+					return predictor.createScoreInvitation(fixtureId,chosen);
+				});
+				$("#predictor button.predictor-submit").click(function(event){
+					console.log("Invoking submit");
+					return predictor.submitPrediction(fixtureId);
+				});
+				$("#predictor button.predict-score").click(function(event){
+					return predictor.createScoreForm(fixtureId);
+				});
+			}
 		}
 	}
 }
-predictor.widget = new predictor.application.Widget(predictor)
-$.get( "oo_predictor.json" , function(data){
-	console.log("FETCHING JSON");
-	predictor.widget.setupFixtures(data.predictor.fixtures);
-	predictor.widget.setupTeams(data.predictor.teams);
-	predictor.widget.setupPredictions(data.predictor.predictions);
-	predictor.widget.start();
-});
-$(document).ready(function(){
-	predictor.widget.ready();
-	predictor.widget.start();
-	console.log(predictor);
-});
-
-
-
-
-
-//Controller
-
-
-//View
+predictor.widget = new predictor.application.Widget(predictor);

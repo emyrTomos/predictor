@@ -27,7 +27,8 @@
 	text-align : center;
 	color : #c8c8c8;
 }
-#predictor a.statslink {
+#predictor a.stats {
+	border : none;
 	display : block;
 	position : absolute;
 	top : 15px;
